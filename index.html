@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Neighborhood Barber Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ================= GLOBAL STYLES ================= */
+    :root {
+      --bg-dark: #07080b;
+      --bg-section: #101118;
+      --bg-lighter: #181924;
+      --accent: #e0a453;
+      --accent-soft: rgba(224, 164, 83, 0.12);
+      --text-main: #f5f5f5;
+      --text-muted: #b2b2b8;
+      --border-subtle: #272838;
+      --error: #ff4b4b;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #181924 0, #07080b 55%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 14px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ================= LAYOUT ================= */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 18px 60px;
+    }
+
+    header {
+      margin-bottom: 40px;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links a {
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+      border-bottom-color: var(--accent);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    section {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.015),
+        rgba(0, 0, 0, 0.6)
+      );
+      border: 1px solid var(--border-subtle);
+      padding: 26px 20px 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    section + section {
+      margin-top: 8px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+      gap: 8px;
+    }
+
+    .section-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-header span {
+      font-size: 0.9rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .section-body {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+    }
+
+    /* ================= HERO ================= */
+    #hero {
+      padding: 26px 22px 26px;
+      background: linear-gradient(
+        130deg,
+        rgba(224, 164, 83, 0.15),
+        rgba(7, 8, 11, 0.8)
+      );
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-tagline {
+      font-size: 0.96rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 3vw + 1.2rem, 2.8rem);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .hero-subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 32rem;
+      margin-bottom: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .meta-pill {
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #120e08;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        background 0.15s ease;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      background: #f0b86d;
+      box-shadow: 0 22px 45px rgba(0, 0, 0, 0.65);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-secondary {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .hero-secondary span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .hero-image img {
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: #15151f;
+    }
+
+    .hero-image-tag {
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(7, 8, 11, 0.78);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    /* ================= ABOUT ================= */
+    .about-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .about-card {
+      padding: 10px 11px;
+      border-radius: var(--radius-md);
+      background: var(--bg-section);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.9rem;
+    }
+
+    .about-card h3 {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .about-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ================= SERVICES ================= */
+    .services-wrapper {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .services-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 11px;
+      border-radius: var(--radius-md);
+      background: var(--bg-section);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.93rem;
+    }
+
+    .service-name {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .service-meta {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .service-price {
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .services-note {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* ================= REVIEWS ================= */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .review-card {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--bg-section);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .review-stars {
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .review-text {
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .review-name {
+      margin-top: auto;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .review-name span {
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .reviews-hint {
+      margin-top: 10px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ================= PHOTO SHOWCASE ================= */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .photo-card {
+      padding: 10px;
+      border-radius: var(--radius-md);
+      background: var(--bg-section);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .photo-caption {
+      margin-top: 8px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    /* ================= CONTACT ================= */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 20px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 0.9rem;
+    }
+
+    .field-group label {
+      font-size: 0.86rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .field-group input,
+    .field-group textarea {
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-section);
+      padding: 9px 13px;
+      color: var(--text-main);
+      font: inherit;
+      outline: none;
+    }
+
+    .field-group textarea {
+      border-radius: 12px;
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .field-group input::placeholder,
+    .field-group textarea::placeholder {
+      color: #6b6c78;
+    }
+
+    .contact-note {
+      margin-top: 6px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .contact-side {
+      padding: 12px 12px 10px;
+      border-radius: var(--radius-md);
+      background: var(--bg-section);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.9rem;
+    }
+
+    .contact-side h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .contact-side p {
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .contact-side dl {
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .contact-side dt {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: #747585;
+      margin-top: 6px;
+    }
+
+    .contact-side dd {
+      margin-left: 0;
+      color: var(--text-main);
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      max-width: 1100px;
+      margin: 20px auto 0;
+      padding: 0 18px 24px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 16px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 860px) {
+      #hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-image {
+        order: -1;
+      }
+      .about-layout,
+      .services-wrapper,
+      .contact-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .reviews-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links {
+        flex-wrap: wrap;
+      }
+      .reviews-grid,
+      .photo-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      section {
+        padding: 22px 16px 20px;
+      }
+      #hero {
+        padding: 22px 16px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="nav-bar">
+        <div class="logo">
+          <div class="logo-mark">NB</div>
+          <span>Neighborhood Barber</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#reviews">Reviews</a>
+          <a href="#photos">Gallery</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+
+      <!-- ================= HERO SECTION ================= -->
+      <section id="hero">
+        <div>
+          <div class="hero-tagline">Classic Cuts • Modern Style</div>
+
+          <!-- ========= EDIT HERO HEADLINE & TAGLINE TEXT HERE ========= -->
+          <h1 class="hero-title">
+            Sharp Cuts. Clean Fades. Every Time.
+          </h1>
+          <p class="hero-subtitle">
+            A neighborhood barbershop focused on precise cuts, clean beard work,
+            and a laid-back atmosphere where every client is treated like a
+            regular.
+          </p>
+          <!-- ========= END HERO TEXT EDIT AREA ========= -->
+
+          <div class="hero-meta">
+            <a href="#contact" class="btn-primary">Book Now</a>
+            <span class="hero-secondary">
+              <span>Walk-ins welcome</span> • Appointments recommended
+            </span>
+          </div>
+
+          <div class="hero-secondary">
+            Open late on Thursdays &amp; Fridays.
+          </div>
+        </div>
+
+        <div class="hero-image">
+          <!-- HERO IMAGE PLACEHOLDER (1 of 6) -->
+          <!-- Replace with hero barber photo (e.g., barber lining up a fade) -->
+          <img
+            src="https://via.placeholder.com/640x420?text=Barbershop+Hero+Photo"
+            alt="Barber working with client in chair"
+          />
+          <div class="hero-image-tag">Local Barbers • Since 20XX</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <!-- ================= ABOUT SECTION ================= -->
+      <section id="about">
+        <div class="section-header">
+          <h2>About the Shop</h2>
+          <span>Our Story</span>
+        </div>
+        <div class="section-body about-layout">
+          <div>
+            <!-- ========= EDIT SHOP INFO / ABOUT TEXT HERE ========= -->
+            <p>
+              Neighborhood Barber is a locally owned shop built on sharp
+              technique, friendly conversation, and attention to the details
+              that make a cut feel finished. From classic tapers to modern skin
+              fades, we keep your look clean and consistent.
+            </p>
+            <p style="margin-top: 10px;">
+              Every appointment is unrushed and tailored—so you leave feeling
+              confident, lined-up, and ready for whatever’s next.
+            </p>
+
+            <div class="about-grid" style="margin-top: 18px;">
+              <div class="about-card">
+                <h3>Hours</h3>
+                <p>
+                  Mon–Wed: 9:00am – 6:00pm<br />
+                  Thu–Fri: 9:00am – 8:00pm<br />
+                  Sat: 9:00am – 3:00pm<br />
+                  Sun: Closed
+                </p>
+              </div>
+              <div class="about-card">
+                <h3>Location</h3>
+                <p>
+                  123 Main Street<br />
+                  Your City, ST 00000<br />
+                  Free street parking out front.
+                </p>
+              </div>
+              <div class="about-card">
+                <h3>Mission</h3>
+                <p>
+                  Deliver honest, dependable haircuts in a space where everyone
+                  feels welcome and leaves looking their best.
+                </p>
+              </div>
+              <div class="about-card">
+                <h3>What to Expect</h3>
+                <p>
+                  One-on-one attention, clean tools, good music, and a relaxed,
+                  professional barbershop environment.
+                </p>
+              </div>
+            </div>
+            <!-- ========= END SHOP INFO EDIT AREA ========= -->
+          </div>
+
+          <div>
+            <!-- ABOUT IMAGE PLACEHOLDER (2 of 6) -->
+            <!-- Replace with interior shop photo (e.g., chairs, mirrors, shop layout) -->
+            <img
+              src="https://via.placeholder.com/520x360?text=Shop+Interior+Photo"
+              alt="Interior of the barbershop with chairs and mirrors"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SERVICES SECTION ================= -->
+      <section id="services">
+        <div class="section-header">
+          <h2>Services &amp; Pricing</h2>
+          <span>Menu</span>
+        </div>
+        <div class="section-body services-wrapper">
+          <div>
+            <!-- ========= EDIT SERVICES & PRICES BELOW ========= -->
+            <div class="services-list">
+              <div class="service-row">
+                <div>
+                  <div class="service-name">Classic Haircut</div>
+                  <div class="service-meta">
+                    Scissor and clipper cut finished with hot lather neck shave.
+                  </div>
+                </div>
+                <div class="service-price">$30</div>
+              </div>
+
+              <div class="service-row">
+                <div>
+                  <div class="service-name">Skin Fade</div>
+                  <div class="service-meta">
+                    High, mid, or low fade with detailed line-up and styling.
+                  </div>
+                </div>
+                <div class="service-price">$35</div>
+              </div>
+
+              <div class="service-row">
+                <div>
+                  <div class="service-name">Beard Trim &amp; Shape</div>
+                  <div class="service-meta">
+                    Beard line-up, bulk removal, and finish with oil or balm.
+                  </div>
+                </div>
+                <div class="service-price">$20</div>
+              </div>
+
+              <div class="service-row">
+                <div>
+                  <div class="service-name">Cut &amp; Beard Combo</div>
+                  <div class="service-meta">
+                    Full haircut plus beard trim and razor detailing.
+                  </div>
+                </div>
+                <div class="service-price">$45</div>
+              </div>
+
+              <div class="service-row">
+                <div>
+                  <div class="service-name">Kids Cut (12 &amp; Under)</div>
+                  <div class="service-meta">
+                    Patient, kid-friendly cuts with simple styling.
+                  </div>
+                </div>
+                <div class="service-price">$25</div>
+              </div>
+            </div>
+            <!-- ========= END SERVICES EDIT AREA ========= -->
+
+            <p class="services-note">
+              Prices are example rates. Adjust to match your current menu and
+              add/remove services as needed.
+            </p>
+          </div>
+
+          <div>
+            <!-- SERVICES IMAGE PLACEHOLDER (3 of 6) -->
+            <!-- Replace with tools / haircut in progress photo (e.g., clippers, comb, scissors in use) -->
+            <img
+              src="https://via.placeholder.com/520x360?text=Tools+or+Haircut+Photo"
+              alt="Close-up of barber tools and a haircut in progress"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= REVIEWS SECTION ================= -->
+      <section id="reviews">
+        <div class="section-header">
+          <h2>Client Reviews</h2>
+          <span>What People Say</span>
+        </div>
+        <div class="section-body">
+          <div class="reviews-grid">
+            <!-- ========= REPLACE SAMPLE REVIEW #1 BELOW ========= -->
+            <article class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">
+                Best cut I’ve had in years. He took his time, checked in along
+                the way, and the fade is still clean weeks later.
+              </p>
+              <p class="review-name">
+                <span>Marcus J.</span> • Regular Client
+              </p>
+            </article>
+            <!-- ========= END SAMPLE REVIEW #1 ========= -->
+
+            <!-- ========= REPLACE SAMPLE REVIEW #2 BELOW ========= -->
+            <article class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">
+                Super welcoming shop. Easy to book, always on schedule, and I
+                walk out looking sharp every single visit.
+              </p>
+              <p class="review-name">
+                <span>Amanda R.</span> • Bringing Her Sons
+              </p>
+            </article>
+            <!-- ========= END SAMPLE REVIEW #2 ========= -->
+
+            <!-- ========= REPLACE SAMPLE REVIEW #3 BELOW ========= -->
+            <article class="review-card">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">
+                Great with beards and line-ups. You can tell he cares about the
+                details and keeping everything even.
+              </p>
+              <p class="review-name">
+                <span>Daniel K.</span> • Beard &amp; Fade
+              </p>
+            </article>
+            <!-- ========= END SAMPLE REVIEW #3 ========= -->
+          </div>
+
+          <p class="reviews-hint">
+            <!-- Clear note for you to edit reviews -->
+            To update reviews, replace the text inside each
+            <strong>&lt;article class="review-card"&gt; ... &lt;/article&gt;</strong>
+            block above with your own client feedback.
+          </p>
+
+          <div style="margin-top: 18px;">
+            <!-- REVIEWS IMAGE PLACEHOLDER (4 of 6) -->
+            <!-- Replace with happy customer photo (e.g., client smiling in chair after fresh cut) -->
+            <img
+              src="https://via.placeholder.com/780x260?text=Happy+Customer+Photo"
+              alt="Happy client with a fresh haircut at the barbershop"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PHOTO SHOWCASE SECTION ================= -->
+      <section id="photos">
+        <div class="section-header">
+          <h2>Photo Showcase</h2>
+          <span>Gallery</span>
+        </div>
+        <div class="section-body photo-grid">
+          <div class="photo-card">
+            <!-- PHOTO SHOWCASE IMAGE PLACEHOLDER (5 of 6) -->
+            <!-- Replace with before/after haircut photo (side-by-side or collage) -->
+            <img
+              src="https://via.placeholder.com/520x340?text=Before+%26+After+Cut"
+              alt="Before and after haircut comparison"
+            />
+            <p class="photo-caption">
+              Before &amp; after: a clean transformation that keeps lines tight
+              and natural.
+            </p>
+          </div>
+
+          <div class="photo-card">
+            <!-- PHOTO SHOWCASE IMAGE PLACEHOLDER (6 of 6) -->
+            <!-- Replace with beard trim or fade close-up photo -->
+            <img
+              src="https://via.placeholder.com/520x340?text=Beard+Trim+or+Fade+Close-up"
+              alt="Close-up of detailed fade and beard work"
+            />
+            <p class="photo-caption">
+              Detailed beard and fade work with attention to symmetry and
+              detail.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTACT SECTION ================= -->
+      <section id="contact">
+        <div class="section-header">
+          <h2>Book a Chair</h2>
+          <span>Contact</span>
+        </div>
+        <div class="section-body contact-grid">
+          <div>
+            <!-- ========= CONTACT FORM LAYOUT ONLY ========= -->
+            <form class="contact-form">
+              <div class="field-group">
+                <label for="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your full name"
+                />
+              </div>
+
+              <div class="field-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="you@example.com"
+                />
+              </div>
+
+              <div class="field-group">
+                <label for="message">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  placeholder="Tell us what service you’d like and preferred day/time."
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Submit Request
+              </button>
+
+              <p class="contact-note">
+                This form is layout only. Connect it to your booking system or
+                email service to start receiving messages.
+              </p>
+            </form>
+            <!-- ========= END CONTACT FORM LAYOUT ========= -->
+          </div>
+
+          <aside class="contact-side">
+            <!-- ========= EDIT CONTACT & BOOKING INFO HERE ========= -->
+            <h3>Booking Details</h3>
+            <p>
+              For same-day appointments, call or text for the quickest
+              response. Messages are returned during normal business hours.
+            </p>
+
+            <dl>
+              <dt>Phone</dt>
+              <dd>(000) 000-0000</dd>
+
+              <dt>Email</dt>
+              <dd>info@neighborhoodbarber.com</dd>
+
+              <dt>Address</dt>
+              <dd>123 Main Street, Your City, ST 00000</dd>
+
+              <dt>Parking</dt>
+              <dd>Street parking and nearby lot available.</dd>
+            </dl>
+            <!-- ========= END CONTACT & BOOKING INFO EDIT AREA ========= -->
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div>&copy; <!-- EDIT YEAR/NAME HERE --> 20XX Neighborhood Barber.</div>
+    <div>Clean cuts • Respectful service • Local shop.</div>
+  </footer>
+
+  <!-- No JavaScript required for this layout -->
+</body>
+</html>
